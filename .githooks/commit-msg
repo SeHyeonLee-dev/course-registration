@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+set -eu
+
+MSG_FILE="${1:-}"
+
+if [ -z "$MSG_FILE" ] || [ ! -f "$MSG_FILE" ]; then
+  echo "[commit-msg hook] Error: commit message file was not provided." >&2
+  echo "Git should pass the message file path as the first argument (\$1)." >&2
+  exit 1
+fi
+
+first_line="$(sed -n '1p' "$MSG_FILE")"
+
+pattern='^(feat|fix|refactor|test|docs|chore): .+$'
+
+if printf '%s' "$first_line" | grep -Eq "$pattern"; then
+  exit 0
+fi
+
+cat >&2 <<'ERR'
+[commit-msg hook] Invalid commit message format.
+
+Required format:
+  <type>: <subject>
+
+Allowed types:
+  feat, fix, refactor, test, docs, chore
+
+Rules:
+  - subject must not be empty
+  - example: feat: add enrollment apply api
+
+Valid examples:
+  feat: add enrollment apply api
+  fix: prevent over-capacity enrollment
+  docs: add flyway guide
+
+Your first line did not match this rule. Please edit and try again.
+ERR
+
+exit 1

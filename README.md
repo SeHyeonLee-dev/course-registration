@@ -20,3 +20,12 @@
    - `SELECT installed_rank, version, description, success FROM flyway_schema_history ORDER BY installed_rank;`
 
 If `flyway_schema_history` exists and `V1__init` is recorded with `success=1`, Flyway is applied.
+
+## Code Formatting (Spotless)
+
+- Auto-format Java sources:
+  - `./gradlew spotlessApply`
+- Verify formatting (fails on violations):
+  - `./gradlew spotlessCheck`
+
+When CI runs `./gradlew check`, formatting is also validated because `check` depends on `spotlessCheck`.
