@@ -1,0 +1,22 @@
+# Registration Project
+
+## Flyway Migration
+
+- Migration location: `src/main/resources/db/migration`
+- Initial schema script: `V1__init.sql`
+- Flyway config:
+  - `spring.flyway.enabled=true`
+  - `spring.flyway.locations=classpath:db/migration`
+  - `spring.flyway.baseline-on-migrate=true`
+- JPA schema mode: `spring.jpa.hibernate.ddl-auto=validate`
+
+## Local Verification
+
+1. Run one of:
+   - `./gradlew test`
+   - `./gradlew bootRun`
+2. Connect to MySQL and verify Flyway history table:
+   - `SHOW TABLES LIKE 'flyway_schema_history';`
+   - `SELECT installed_rank, version, description, success FROM flyway_schema_history ORDER BY installed_rank;`
+
+If `flyway_schema_history` exists and `V1__init` is recorded with `success=1`, Flyway is applied.
