@@ -8,6 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.university.registration.domain.student.Student;
+import com.university.registration.domain.student.StudentRole;
 import com.university.registration.domain.student.repository.StudentRepository;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
@@ -121,7 +122,25 @@ class AuthControllerTest {
         .andExpect(jsonPath("$.studentId").value(1))
         .andExpect(jsonPath("$.studentNumber").value("20230001"))
         .andExpect(jsonPath("$.name").value("홍길동"))
-        .andExpect(jsonPath("$.role").value("STUDENT"))
+        .andExpect(jsonPath("$.role").value("ROLE_STUDENT"))
+        .andExpect(jsonPath("$.maxCredit").value(18));
+  }
+
+  @Test
+  void meReturnsAdminRoleWhenStudentRoleIsAdmin() throws Exception {
+    Student student = student(1L, "admin01", "관리자", "password123", 18, StudentRole.ADMIN);
+    when(studentRepository.findById(1L)).thenReturn(Optional.of(student));
+
+    MockHttpSession session = new MockHttpSession();
+    session.setAttribute(AuthSessionKeys.LOGIN_STUDENT_ID, 1L);
+
+    mockMvc
+        .perform(get("/api/auth/me").session(session))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.studentId").value(1))
+        .andExpect(jsonPath("$.studentNumber").value("admin01"))
+        .andExpect(jsonPath("$.name").value("관리자"))
+        .andExpect(jsonPath("$.role").value("ROLE_ADMIN"))
         .andExpect(jsonPath("$.maxCredit").value(18));
   }
 
@@ -135,8 +154,19 @@ class AuthControllerTest {
 
   private Student student(
       Long id, String studentNumber, String name, String passwordHash, Integer maxCredit) {
+    return student(id, studentNumber, name, passwordHash, maxCredit, StudentRole.STUDENT);
+  }
+
+  private Student student(
+      Long id,
+      String studentNumber,
+      String name,
+      String passwordHash,
+      Integer maxCredit,
+      StudentRole role) {
     Student student = new Student(studentNumber, name, passwordHash, maxCredit);
     ReflectionTestUtils.setField(student, "id", id);
+    ReflectionTestUtils.setField(student, "role", role);
     return student;
   }
 }

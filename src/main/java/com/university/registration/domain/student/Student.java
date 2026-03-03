@@ -2,6 +2,8 @@ package com.university.registration.domain.student;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -35,6 +37,10 @@ public class Student {
   @Column(name = "max_credit", nullable = false)
   private Integer maxCredit = 18;
 
+  @Enumerated(EnumType.STRING)
+  @Column(name = "role", nullable = false, length = 20)
+  private StudentRole role = StudentRole.STUDENT;
+
   @Column(name = "created_at", nullable = false)
   private LocalDateTime createdAt;
 
@@ -43,11 +49,19 @@ public class Student {
 
   // Extension point: admin can be split into a dedicated aggregate later.
   public Student(String studentNumber, String name, String passwordHash, Integer maxCredit) {
+    this(studentNumber, name, passwordHash, maxCredit, StudentRole.STUDENT);
+  }
+
+  public Student(
+      String studentNumber, String name, String passwordHash, Integer maxCredit, StudentRole role) {
     this.studentNumber = studentNumber;
     this.name = name;
     this.passwordHash = passwordHash;
     if (maxCredit != null) {
       this.maxCredit = maxCredit;
+    }
+    if (role != null) {
+      this.role = role;
     }
   }
 
@@ -58,6 +72,9 @@ public class Student {
     this.updatedAt = now;
     if (this.maxCredit == null) {
       this.maxCredit = 18;
+    }
+    if (this.role == null) {
+      this.role = StudentRole.STUDENT;
     }
   }
 
