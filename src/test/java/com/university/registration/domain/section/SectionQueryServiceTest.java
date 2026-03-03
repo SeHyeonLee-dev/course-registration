@@ -8,6 +8,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.university.registration.domain.course.Course;
+import com.university.registration.domain.section.dto.SectionDetailResponse;
 import com.university.registration.domain.section.dto.SectionListResponse;
 import com.university.registration.domain.section.repository.SectionRepository;
 import com.university.registration.domain.semester.Semester;
@@ -17,6 +18,7 @@ import com.university.registration.global.exception.ErrorCode;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -86,6 +88,52 @@ class SectionQueryServiceTest {
     assertThat(response.totalElements()).isEqualTo(1L);
     assertThat(response.totalPages()).isEqualTo(1);
     verify(semesterRepository).existsById(eq(1L));
+  }
+
+  @Test
+  void throwsCourseNotFoundWhenSectionDoesNotExist() {
+    when(sectionRepository.findWithSemesterAndCourseById(1L)).thenReturn(Optional.empty());
+
+    assertThatThrownBy(() -> sectionQueryService.getSectionDetail(1L))
+        .isInstanceOf(BusinessException.class)
+        .extracting("errorCode")
+        .isEqualTo(ErrorCode.COURSE_NOT_FOUND);
+  }
+
+  @Test
+  void returnsSectionDetail() {
+    Semester semester =
+        semester(
+            1L,
+            "2026-1",
+            LocalDate.of(2026, 3, 2),
+            LocalDate.of(2026, 6, 20),
+            LocalDateTime.of(2026, 2, 20, 10, 0),
+            LocalDateTime.of(2026, 3, 8, 23, 59, 59));
+    Course course = course(10L, "CSE201", "자료구조", 3, "컴퓨터공학과");
+    Section section = section(1L, semester, course, 40, 27);
+
+    when(sectionRepository.findWithSemesterAndCourseById(1L)).thenReturn(Optional.of(section));
+
+    SectionDetailResponse response = sectionQueryService.getSectionDetail(1L);
+
+    assertThat(response.sectionId()).isEqualTo(1L);
+    assertThat(response.semesterId()).isEqualTo(1L);
+    assertThat(response.semesterName()).isEqualTo("2026-1");
+    assertThat(response.course().courseId()).isEqualTo(10L);
+    assertThat(response.course().code()).isEqualTo("CSE201");
+    assertThat(response.course().name()).isEqualTo("자료구조");
+    assertThat(response.course().credit()).isEqualTo(3);
+    assertThat(response.course().department()).isEqualTo("컴퓨터공학과");
+    assertThat(response.sectionNo()).isEqualTo("01");
+    assertThat(response.professorName()).isEqualTo("김교수");
+    assertThat(response.classroom()).isEqualTo("공학관 101");
+    assertThat(response.dayOfWeek()).isEqualTo("MON");
+    assertThat(response.startPeriod()).isEqualTo(3);
+    assertThat(response.endPeriod()).isEqualTo(4);
+    assertThat(response.capacity()).isEqualTo(40);
+    assertThat(response.currentCount()).isEqualTo(27);
+    assertThat(response.remainingCount()).isEqualTo(13);
   }
 
   private Semester semester(

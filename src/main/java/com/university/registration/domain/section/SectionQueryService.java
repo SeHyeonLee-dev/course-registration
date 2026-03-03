@@ -1,5 +1,6 @@
 package com.university.registration.domain.section;
 
+import com.university.registration.domain.section.dto.SectionDetailResponse;
 import com.university.registration.domain.section.dto.SectionListItemResponse;
 import com.university.registration.domain.section.dto.SectionListResponse;
 import com.university.registration.domain.section.repository.SectionRepository;
@@ -43,5 +44,15 @@ public class SectionQueryService {
         sectionPage.getSize(),
         sectionPage.getTotalElements(),
         sectionPage.getTotalPages());
+  }
+
+  @Transactional(readOnly = true)
+  public SectionDetailResponse getSectionDetail(Long sectionId) {
+    Section section =
+        sectionRepository
+            .findWithSemesterAndCourseById(sectionId)
+            .orElseThrow(() -> new BusinessException(ErrorCode.COURSE_NOT_FOUND));
+
+    return SectionDetailResponse.from(section);
   }
 }
