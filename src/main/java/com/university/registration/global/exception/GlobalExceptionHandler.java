@@ -1,6 +1,7 @@
 package com.university.registration.global.exception;
 
 import com.university.registration.global.api.ApiErrorResponse;
+import jakarta.validation.ConstraintViolationException;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
@@ -48,7 +49,11 @@ public class GlobalExceptionHandler {
     return ResponseEntity.status(errorCode.getStatus()).body(body);
   }
 
-  @ExceptionHandler({MethodArgumentTypeMismatchException.class, IllegalArgumentException.class})
+  @ExceptionHandler({
+    MethodArgumentTypeMismatchException.class,
+    IllegalArgumentException.class,
+    ConstraintViolationException.class
+  })
   public ResponseEntity<ApiErrorResponse> handleBadRequest(
       Exception exception, HttpServletRequest request) {
     ErrorCode errorCode = ErrorCode.INVALID_INPUT;

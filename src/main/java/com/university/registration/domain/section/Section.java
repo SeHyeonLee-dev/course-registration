@@ -102,6 +102,17 @@ public class Section {
     this.capacity = capacity;
   }
 
+  public void increaseCurrentCount() {
+    this.currentCount = this.currentCount + 1;
+  }
+
+  public void decreaseCurrentCount() {
+    if (this.currentCount <= 0) {
+      throw new IllegalStateException("현재 신청 인원이 0보다 작아질 수 없습니다.");
+    }
+    this.currentCount = this.currentCount - 1;
+  }
+
   @PrePersist
   void onCreate() {
     LocalDateTime now = LocalDateTime.now();
