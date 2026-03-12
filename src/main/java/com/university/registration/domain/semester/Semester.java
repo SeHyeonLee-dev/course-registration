@@ -58,6 +58,11 @@ public class Semester {
     this.enrollEndAt = enrollEndAt;
   }
 
+  public void updateEnrollmentPeriod(LocalDateTime enrollStartAt, LocalDateTime enrollEndAt) {
+    this.enrollStartAt = enrollStartAt;
+    this.enrollEndAt = enrollEndAt;
+  }
+
   @PrePersist
   void onCreate() {
     LocalDateTime now = LocalDateTime.now();
