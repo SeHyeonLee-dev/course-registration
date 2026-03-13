@@ -1,5 +1,9 @@
 import { createBrowserRouter } from "react-router-dom";
 import { LoginPage } from "../../features/auth/LoginPage";
+import { MyEnrollmentsPage } from "../../features/enrollments/MyEnrollmentsPage";
+import { SectionDetailPage } from "../../features/sections/SectionDetailPage";
+import { SectionListPage } from "../../features/sections/SectionListPage";
+import { SemesterListPage } from "../../features/semesters/SemesterListPage";
 import { AdminGuard, AuthGuard, HomeRedirect } from "./guards";
 import { RootLayout } from "../layouts/RootLayout";
 import { FeaturePlaceholder } from "../../shared/ui/FeaturePlaceholder";
@@ -16,10 +20,7 @@ export const router = createBrowserRouter([
         path: "semesters",
         element: (
           <AuthGuard>
-            <FeaturePlaceholder
-              description="Semester listing will move into its own feature module next."
-              title="Semesters"
-            />
+            <SemesterListPage />
           </AuthGuard>
         ),
       },
@@ -27,10 +28,7 @@ export const router = createBrowserRouter([
         path: "sections",
         element: (
           <AuthGuard>
-            <FeaturePlaceholder
-              description="Section search and filters will move into the student-flow branch next."
-              title="Sections"
-            />
+            <SectionListPage />
           </AuthGuard>
         ),
       },
@@ -38,10 +36,7 @@ export const router = createBrowserRouter([
         path: "sections/:sectionId",
         element: (
           <AuthGuard>
-            <FeaturePlaceholder
-              description="Section detail and apply actions will move into the student-flow branch next."
-              title="Section Detail"
-            />
+            <SectionDetailPage />
           </AuthGuard>
         ),
       },
@@ -49,10 +44,7 @@ export const router = createBrowserRouter([
         path: "my-enrollments",
         element: (
           <AuthGuard>
-            <FeaturePlaceholder
-              description="Enrollment list and timetable will move into the student-flow branch next."
-              title="My Enrollments"
-            />
+            <MyEnrollmentsPage />
           </AuthGuard>
         ),
       },
