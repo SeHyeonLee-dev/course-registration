@@ -1,0 +1,145 @@
+{
+  "info": {
+    "_postman_id": "9adf74f9-9ea2-48d1-955a-2d028adad7df",
+    "name": "Registration Sections API",
+    "description": "Section list/detail APIs",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1) Section List",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/sections?semesterId={{semesterId}}&keyword={{keyword}}&dayOfWeek={{dayOfWeek}}&page=0&size=20",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "sections"
+          ],
+          "query": [
+            {
+              "key": "semesterId",
+              "value": "{{semesterId}}"
+            },
+            {
+              "key": "keyword",
+              "value": "{{keyword}}"
+            },
+            {
+              "key": "dayOfWeek",
+              "value": "{{dayOfWeek}}"
+            },
+            {
+              "key": "page",
+              "value": "0"
+            },
+            {
+              "key": "size",
+              "value": "20"
+            }
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('status is 200', function () {",
+              "  pm.response.to.have.status(200);",
+              "});",
+              "",
+              "var data = pm.response.json();",
+              "pm.test('content exists', function () {",
+              "  pm.expect(data.content).to.be.an('array');",
+              "});",
+              "",
+              "if (data.content && data.content.length > 0 && data.content[0].sectionId) {",
+              "  pm.environment.set('sectionId', String(data.content[0].sectionId));",
+              "}"
+            ]
+          }
+        }
+      ],
+      "response": []
+    },
+    {
+      "name": "2) Section Detail",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/sections/{{sectionId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "sections",
+            "{{sectionId}}"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('status is 200', function () {",
+              "  pm.response.to.have.status(200);",
+              "});",
+              "",
+              "var data = pm.response.json();",
+              "pm.test('has capacity/current/remaining', function () {",
+              "  pm.expect(data.capacity).to.exist;",
+              "  pm.expect(data.currentCount).to.exist;",
+              "  pm.expect(data.remainingCount).to.exist;",
+              "});",
+              "",
+              "pm.test('has schedule and professor fields', function () {",
+              "  pm.expect(data.dayOfWeek).to.exist;",
+              "  pm.expect(data.startPeriod).to.exist;",
+              "  pm.expect(data.endPeriod).to.exist;",
+              "  pm.expect(data.professorName).to.exist;",
+              "});",
+              "",
+              "pm.test('has nested course object', function () {",
+              "  pm.expect(data.course).to.be.an('object');",
+              "  pm.expect(data.course.courseId).to.exist;",
+              "});"
+            ]
+          }
+        }
+      ],
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    },
+    {
+      "key": "semesterId",
+      "value": "1"
+    },
+    {
+      "key": "keyword",
+      "value": ""
+    },
+    {
+      "key": "dayOfWeek",
+      "value": ""
+    },
+    {
+      "key": "sectionId",
+      "value": "1"
+    }
+  ]
+}
