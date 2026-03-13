@@ -1,4 +1,10 @@
 import { createBrowserRouter } from "react-router-dom";
+import { AdminLayout } from "../layouts/AdminLayout";
+import { AdminCoursePage } from "../../features/admin/AdminCoursePage";
+import { AdminDashboardPage } from "../../features/admin/AdminDashboardPage";
+import { AdminSectionEnrollmentStatusPage } from "../../features/admin/AdminSectionEnrollmentStatusPage";
+import { AdminSectionPage } from "../../features/admin/AdminSectionPage";
+import { AdminSemesterPage } from "../../features/admin/AdminSemesterPage";
 import { LoginPage } from "../../features/auth/LoginPage";
 import { MyEnrollmentsPage } from "../../features/enrollments/MyEnrollmentsPage";
 import { SectionDetailPage } from "../../features/sections/SectionDetailPage";
@@ -6,7 +12,6 @@ import { SectionListPage } from "../../features/sections/SectionListPage";
 import { SemesterListPage } from "../../features/semesters/SemesterListPage";
 import { AdminGuard, AuthGuard, HomeRedirect } from "./guards";
 import { RootLayout } from "../layouts/RootLayout";
-import { FeaturePlaceholder } from "../../shared/ui/FeaturePlaceholder";
 import { Page } from "../../shared/ui/Page";
 
 export const router = createBrowserRouter([
@@ -52,12 +57,17 @@ export const router = createBrowserRouter([
         path: "admin",
         element: (
           <AdminGuard>
-            <FeaturePlaceholder
-              description="Admin forms and enrollment status screens will move into the admin branch next."
-              title="Admin"
-            />
+            <AdminLayout />
           </AdminGuard>
         ),
+        children: [
+          { index: true, element: <AdminDashboardPage /> },
+          { path: "semesters/new", element: <AdminSemesterPage /> },
+          { path: "courses/new", element: <AdminCoursePage /> },
+          { path: "sections/new", element: <AdminSectionPage /> },
+          { path: "sections/enrollments", element: <AdminSectionEnrollmentStatusPage /> },
+          { path: "sections/:sectionId/enrollments", element: <AdminSectionEnrollmentStatusPage /> },
+        ],
       },
       {
         path: "403",

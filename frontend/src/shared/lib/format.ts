@@ -2,8 +2,12 @@ export function formatDateRange(start: string, end: string) {
   return `${start} - ${end}`;
 }
 
+export function formatDateTime(value: string) {
+  return value.replace("T", " ");
+}
+
 export function formatDateTimeRange(start: string, end: string) {
-  return `${start} - ${end}`;
+  return `${formatDateTime(start)} - ${formatDateTime(end)}`;
 }
 
 export function formatPeriods(startPeriod: number, endPeriod: number) {
@@ -16,4 +20,8 @@ export function formatSchedule(dayOfWeek: string, startPeriod: number, endPeriod
 
 export function formatSeatSummary(remainingCount: number, capacity: number) {
   return `${remainingCount} / ${capacity} seats left`;
+}
+
+export function toDateTimeLocalValue(value: string) {
+  return value.slice(0, 16);
 }
