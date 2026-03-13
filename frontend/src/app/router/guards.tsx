@@ -7,17 +7,17 @@ export function HomeRedirect() {
   const meQuery = useMeQuery();
 
   if (meQuery.isLoading) {
-    return <Page title="Loading">Checking session...</Page>;
+    return <Page title="불러오는 중">사용자 정보를 확인하고 있습니다.</Page>;
   }
 
-  return <Navigate replace to={meQuery.data ? "/semesters" : "/login"} />;
+  return <Navigate replace to={meQuery.data ? "/sections" : "/login"} />;
 }
 
 export function AuthGuard({ children }: { children: ReactElement }) {
   const meQuery = useMeQuery();
 
   if (meQuery.isLoading) {
-    return <Page title="Loading">Checking session...</Page>;
+    return <Page title="불러오는 중">사용자 정보를 확인하고 있습니다.</Page>;
   }
 
   if (!meQuery.data) {
@@ -31,7 +31,7 @@ export function AdminGuard({ children }: { children: ReactElement }) {
   const meQuery = useMeQuery();
 
   if (meQuery.isLoading) {
-    return <Page title="Loading">Checking permissions...</Page>;
+    return <Page title="불러오는 중">접근 권한을 확인하고 있습니다.</Page>;
   }
 
   if (!meQuery.data) {

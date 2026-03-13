@@ -38,7 +38,7 @@ export function Button({
 
   return (
     <button className={classes} disabled={isLoading || props.disabled} {...props}>
-      {isLoading ? "Loading..." : children}
+      {isLoading ? "처리 중..." : children}
     </button>
   );
 }

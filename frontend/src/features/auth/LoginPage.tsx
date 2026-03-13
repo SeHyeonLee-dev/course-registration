@@ -5,7 +5,6 @@ import { Button } from "../../shared/ui/Button";
 import { Card } from "../../shared/ui/Card";
 import { ErrorAlert } from "../../shared/ui/ErrorAlert";
 import { Field } from "../../shared/ui/Field";
-import { Notice } from "../../shared/ui/Notice";
 import { Page } from "../../shared/ui/Page";
 import { queryKeys } from "../../shared/api/queryKeys";
 import { getMeOrNull } from "./api";
@@ -18,7 +17,7 @@ export function LoginPage() {
   const loginMutation = useLoginMutation();
 
   if (meQuery.data) {
-    return <Navigate replace to={meQuery.data.role === "ROLE_ADMIN" ? "/admin" : "/semesters"} />;
+    return <Navigate replace to={meQuery.data.role === "ROLE_ADMIN" ? "/admin" : "/sections"} />;
   }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -35,38 +34,25 @@ export function LoginPage() {
       queryFn: getMeOrNull,
     });
 
-    navigate(me?.role === "ROLE_ADMIN" ? "/admin" : "/semesters", { replace: true });
+    navigate(me?.role === "ROLE_ADMIN" ? "/admin" : "/sections", { replace: true });
   }
 
   return (
-    <Page
-      description="Session-based login against POST /api/auth/login and GET /api/auth/me."
-      title="Login"
-    >
-      <Card
-        className="auth-panel"
-        subtitle="Use a valid student account or the seeded admin account."
-        title="Sign in"
-      >
+    <Page description="학번과 비밀번호를 입력해 로그인하세요." title="로그인">
+      <Card className="auth-panel" subtitle="학생 또는 관리자 계정으로 접속할 수 있습니다." title="접속하기">
         <form className="auth-form" onSubmit={handleSubmit}>
-          <Field htmlFor="studentNumber" label="Student number">
-            <input defaultValue="20230001" id="studentNumber" name="studentNumber" required />
+          <Field htmlFor="studentNumber" label="학번">
+            <input id="studentNumber" name="studentNumber" placeholder="학번을 입력하세요" required />
           </Field>
 
-          <Field htmlFor="password" label="Password">
-            <input defaultValue="password123" id="password" name="password" required type="password" />
+          <Field htmlFor="password" label="비밀번호">
+            <input id="password" name="password" placeholder="비밀번호를 입력하세요" required type="password" />
           </Field>
-
-          <Notice title="Known accounts" tone="info">
-            Student example: <code>20230001 / password123</code>
-            <br />
-            Admin seed: <code>admin01 / admin1234</code>
-          </Notice>
 
           {loginMutation.error && <ErrorAlert error={loginMutation.error} />}
 
           <Button isLoading={loginMutation.isPending} type="submit">
-            Login
+            로그인
           </Button>
         </form>
       </Card>

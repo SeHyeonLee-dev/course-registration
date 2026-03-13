@@ -14,12 +14,12 @@ export function SectionDetailPage() {
   const applyMutation = useApplyEnrollmentMutation(sectionId);
 
   if (sectionQuery.isLoading) {
-    return <Page title="Section Detail">Loading section detail...</Page>;
+    return <Page title="강의 상세">강의 정보를 불러오고 있습니다.</Page>;
   }
 
   if (sectionQuery.error) {
     return (
-      <Page title="Section Detail">
+      <Page title="강의 상세">
         <ErrorAlert error={sectionQuery.error} />
       </Page>
     );
@@ -29,9 +29,9 @@ export function SectionDetailPage() {
 
   if (!section) {
     return (
-      <Page title="Section Detail">
-        <Notice title="Missing section" tone="info">
-          Section data was not returned by the API.
+      <Page title="강의 상세">
+        <Notice title="강의 정보를 찾을 수 없습니다." tone="info">
+          선택한 강의 정보를 불러오지 못했습니다.
         </Notice>
       </Page>
     );
@@ -41,13 +41,13 @@ export function SectionDetailPage() {
     <Page
       actions={
         <Button asChild size="sm" variant="ghost">
-          <Link to={`/sections?semesterId=${section.semesterId}`}>Back to list</Link>
+          <Link to={`/sections?semesterId=${section.semesterId}`}>목록으로</Link>
         </Button>
       }
-      description={`Section detail from GET /api/sections/${sectionId}`}
+      description="선택한 강의의 시간과 개설 정보를 확인할 수 있습니다."
       title={`${section.course.code} ${section.course.name}`}
     >
-      <Card subtitle={`${section.semesterName} • Section ${section.sectionNo}`} title="Overview">
+      <Card subtitle={`${section.semesterName} / ${section.sectionNo}분반`} title="강의 정보">
         <div className="badge-row">
           <Badge tone="primary">
             {formatSchedule(section.dayOfWeek, section.startPeriod, section.endPeriod)}
@@ -58,36 +58,36 @@ export function SectionDetailPage() {
 
         <div className="detail-list detail-list--two-columns">
           <div>
-            <span className="detail-list__label">Course code</span>
+            <span className="detail-list__label">과목코드</span>
             <span>{section.course.code}</span>
           </div>
           <div>
-            <span className="detail-list__label">Credit</span>
+            <span className="detail-list__label">학점</span>
             <span>{section.course.credit}</span>
           </div>
           <div>
-            <span className="detail-list__label">Department</span>
-            <span>{section.course.department ?? "Not set"}</span>
+            <span className="detail-list__label">개설학과</span>
+            <span>{section.course.department ?? "미정"}</span>
           </div>
           <div>
-            <span className="detail-list__label">Classroom</span>
-            <span>{section.classroom ?? "Not set"}</span>
+            <span className="detail-list__label">강의실</span>
+            <span>{section.classroom ?? "미정"}</span>
           </div>
         </div>
 
         {applyMutation.error && <ErrorAlert error={applyMutation.error} />}
         {applyMutation.isSuccess && (
-          <Notice title="Enrollment applied" tone="success">
-            The enrollment request completed successfully.
+          <Notice title="수강신청이 완료되었습니다." tone="success">
+            신청 내역에서 반영 여부를 확인할 수 있습니다.
           </Notice>
         )}
 
         <div className="button-row">
           <Button isLoading={applyMutation.isPending} onClick={() => applyMutation.mutate()} type="button">
-            Apply enrollment
+            신청하기
           </Button>
           <Button asChild size="md" variant="secondary">
-            <Link to={`/my-enrollments?semesterId=${section.semesterId}`}>View my enrollments</Link>
+            <Link to={`/my-enrollments?semesterId=${section.semesterId}`}>내 신청내역 보기</Link>
           </Button>
         </div>
       </Card>

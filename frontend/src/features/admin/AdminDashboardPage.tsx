@@ -6,48 +6,40 @@ import { Page } from "../../shared/ui/Page";
 
 export function AdminDashboardPage() {
   return (
-    <Page
-      description="Admin-only operations backed by /api/admin endpoints in the current repo."
-      title="Admin"
-    >
-      <Notice title="Repo constraint" tone="info">
-        A course list lookup API was not found in the repo. Create a course first, then reuse the
-        returned course ID when creating a section.
+    <Page description="학기, 과목, 분반을 관리하고 신청 현황을 확인할 수 있습니다." title="관리자">
+      <Notice title="과목 ID 입력 안내" tone="info">
+        과목 목록 조회 기능이 아직 없어 분반 개설 시 과목 ID를 직접 입력해야 합니다.
       </Notice>
 
       <div className="summary-grid">
-        <Card title="Semesters" subtitle="POST /api/admin/semesters and PUT enrollment period">
-          <p>Create a new semester and adjust enrollment windows for an existing semester.</p>
+        <Card subtitle="학기를 만들고 신청 기간을 조정할 수 있습니다." title="학기 관리">
           <div className="button-row">
             <Button asChild size="sm" variant="secondary">
-              <Link to="/admin/semesters/new">Manage semesters</Link>
+              <Link to="/admin/semesters/new">학기 관리하기</Link>
             </Button>
           </div>
         </Card>
 
-        <Card title="Courses" subtitle="POST /api/admin/courses">
-          <p>Create a course and capture the returned course ID for later section creation.</p>
+        <Card subtitle="분반 개설에 사용할 과목을 등록합니다." title="과목 관리">
           <div className="button-row">
             <Button asChild size="sm" variant="secondary">
-              <Link to="/admin/courses/new">Create course</Link>
+              <Link to="/admin/courses/new">과목 등록하기</Link>
             </Button>
           </div>
         </Card>
 
-        <Card title="Sections" subtitle="POST /api/admin/sections">
-          <p>Create a section by combining a semester ID, course ID, schedule, and capacity.</p>
+        <Card subtitle="학기와 과목을 연결해 분반을 개설합니다." title="분반 개설">
           <div className="button-row">
             <Button asChild size="sm" variant="secondary">
-              <Link to="/admin/sections/new">Create section</Link>
+              <Link to="/admin/sections/new">분반 개설하기</Link>
             </Button>
           </div>
         </Card>
 
-        <Card title="Enrollment Status" subtitle="GET /api/admin/sections/{sectionId}/enrollments">
-          <p>Search sections and inspect enrolled students, remaining seats, and submission times.</p>
+        <Card subtitle="분반별 신청 인원과 학생 목록을 확인합니다." title="신청 현황">
           <div className="button-row">
             <Button asChild size="sm" variant="secondary">
-              <Link to="/admin/sections/enrollments">View status</Link>
+              <Link to="/admin/sections/enrollments">현황 확인하기</Link>
             </Button>
           </div>
         </Card>
