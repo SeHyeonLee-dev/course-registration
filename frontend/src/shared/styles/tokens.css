@@ -1,0 +1,20 @@
+:root {
+  --color-bg: #f4f7fb;
+  --color-surface: #ffffff;
+  --color-surface-muted: #eef3f9;
+  --color-border: #d5deea;
+  --color-border-strong: #afbdd0;
+  --color-text: #132033;
+  --color-text-muted: #617083;
+  --color-primary: #1550a5;
+  --color-primary-strong: #103d7e;
+  --color-danger: #a43232;
+  --color-danger-bg: #fff2f2;
+  --color-success: #1d7744;
+  --color-success-bg: #eefbf3;
+  --color-info-bg: #eef5ff;
+  --radius-sm: 12px;
+  --radius-md: 18px;
+  --shadow-sm: 0 10px 24px rgba(10, 31, 68, 0.08);
+  --font-sans: "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+}
