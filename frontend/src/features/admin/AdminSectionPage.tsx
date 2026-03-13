@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
-import { formatSchedule } from "../../shared/lib/format";
+import { formatDayOfWeek, formatSchedule } from "../../shared/lib/format";
 import { Badge } from "../../shared/ui/Badge";
 import { Button } from "../../shared/ui/Button";
 import { Card } from "../../shared/ui/Card";
@@ -34,16 +34,12 @@ export function AdminSectionPage() {
   const semesters = semestersQuery.data?.items ?? [];
 
   return (
-    <Page
-      description="Create sections from semester, course, schedule, and capacity inputs."
-      title="Admin / Sections"
-    >
-      <Notice title="Course ID is manual" tone="info">
-        No course lookup endpoint was found in the repo. Use the course ID returned by the course
-        creation screen.
+    <Page description="학기와 과목을 연결해 분반을 개설할 수 있습니다." title="관리자 / 분반">
+      <Notice title="과목 ID 입력 안내" tone="info">
+        과목 목록 조회 기능이 아직 없어 과목 등록 후 생성된 과목 ID를 직접 입력해야 합니다.
       </Notice>
 
-      <Card subtitle="POST /api/admin/sections" title="Create section">
+      <Card subtitle="새 분반을 개설합니다." title="분반 개설">
         {semestersQuery.error && <ErrorAlert error={semestersQuery.error} />}
 
         <form
@@ -79,7 +75,7 @@ export function AdminSectionPage() {
           }}
         >
           <div className="filters-grid">
-            <Field htmlFor="section-semester" label="Semester">
+            <Field htmlFor="section-semester" label="학기">
               <select
                 id="section-semester"
                 onChange={(event) =>
@@ -88,7 +84,7 @@ export function AdminSectionPage() {
                 required
                 value={form.semesterId}
               >
-                <option value="">Select semester</option>
+                <option value="">학기를 선택하세요</option>
                 {semesters.map((semester) => (
                   <option key={semester.semesterId} value={String(semester.semesterId)}>
                     {semester.name}
@@ -97,7 +93,7 @@ export function AdminSectionPage() {
               </select>
             </Field>
 
-            <Field htmlFor="section-course-id" label="Course ID">
+            <Field htmlFor="section-course-id" label="과목 ID">
               <input
                 id="section-course-id"
                 min="1"
@@ -108,7 +104,7 @@ export function AdminSectionPage() {
               />
             </Field>
 
-            <Field htmlFor="section-number" label="Section No">
+            <Field htmlFor="section-number" label="분반">
               <input
                 id="section-number"
                 onChange={(event) => setForm((current) => ({ ...current, sectionNo: event.target.value }))}
@@ -118,7 +114,7 @@ export function AdminSectionPage() {
               />
             </Field>
 
-            <Field htmlFor="section-professor" label="Professor">
+            <Field htmlFor="section-professor" label="교수명">
               <input
                 id="section-professor"
                 onChange={(event) =>
@@ -130,7 +126,7 @@ export function AdminSectionPage() {
               />
             </Field>
 
-            <Field htmlFor="section-classroom" label="Classroom">
+            <Field htmlFor="section-classroom" label="강의실">
               <input
                 id="section-classroom"
                 onChange={(event) => setForm((current) => ({ ...current, classroom: event.target.value }))}
@@ -139,7 +135,7 @@ export function AdminSectionPage() {
               />
             </Field>
 
-            <Field htmlFor="section-day" label="Day of week">
+            <Field htmlFor="section-day" label="요일">
               <select
                 id="section-day"
                 onChange={(event) =>
@@ -150,13 +146,13 @@ export function AdminSectionPage() {
               >
                 {DAY_OPTIONS.map((dayOfWeek) => (
                   <option key={dayOfWeek} value={dayOfWeek}>
-                    {dayOfWeek}
+                    {formatDayOfWeek(dayOfWeek)}
                   </option>
                 ))}
               </select>
             </Field>
 
-            <Field htmlFor="section-start-period" label="Start period">
+            <Field htmlFor="section-start-period" label="시작 교시">
               <input
                 id="section-start-period"
                 min="1"
@@ -169,7 +165,7 @@ export function AdminSectionPage() {
               />
             </Field>
 
-            <Field htmlFor="section-end-period" label="End period">
+            <Field htmlFor="section-end-period" label="종료 교시">
               <input
                 id="section-end-period"
                 min="1"
@@ -180,7 +176,7 @@ export function AdminSectionPage() {
               />
             </Field>
 
-            <Field htmlFor="section-capacity" label="Capacity">
+            <Field htmlFor="section-capacity" label="정원">
               <input
                 id="section-capacity"
                 min="1"
@@ -196,14 +192,14 @@ export function AdminSectionPage() {
 
           <div className="button-row">
             <Button isLoading={createSectionMutation.isPending} type="submit">
-              Create section
+              분반 개설
             </Button>
           </div>
         </form>
       </Card>
 
       {createdSection && (
-        <Card subtitle="201 Created response" title="Created section">
+        <Card subtitle="방금 개설한 분반 정보입니다." title="개설된 분반">
           <div className="badge-row">
             <Badge tone="primary">
               {formatSchedule(
@@ -213,38 +209,38 @@ export function AdminSectionPage() {
               )}
             </Badge>
             <Badge>{createdSection.professorName}</Badge>
-            <Badge>Section ID #{createdSection.sectionId}</Badge>
+            <Badge>분반 ID {createdSection.sectionId}</Badge>
           </div>
 
           <div className="detail-list detail-list--two-columns">
             <div>
-              <span className="detail-list__label">Course</span>
+              <span className="detail-list__label">과목</span>
               <span>
                 {createdSection.courseCode} {createdSection.courseName}
               </span>
             </div>
             <div>
-              <span className="detail-list__label">Semester</span>
+              <span className="detail-list__label">학기</span>
               <span>{createdSection.semesterName}</span>
             </div>
             <div>
-              <span className="detail-list__label">Section No</span>
+              <span className="detail-list__label">분반</span>
               <span>{createdSection.sectionNo}</span>
             </div>
             <div>
-              <span className="detail-list__label">Capacity</span>
+              <span className="detail-list__label">정원</span>
               <span>{createdSection.capacity}</span>
             </div>
             <div>
-              <span className="detail-list__label">Classroom</span>
-              <span>{createdSection.classroom ?? "Not set"}</span>
+              <span className="detail-list__label">강의실</span>
+              <span>{createdSection.classroom ?? "미정"}</span>
             </div>
           </div>
 
           <div className="button-row">
             <Button asChild size="sm" variant="secondary">
               <Link to={`/admin/sections/${createdSection.sectionId}/enrollments`}>
-                View enrollment status
+                신청 현황 보기
               </Link>
             </Button>
           </div>

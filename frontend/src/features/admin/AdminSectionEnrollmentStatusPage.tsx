@@ -66,17 +66,14 @@ export function AdminSectionEnrollmentStatusPage() {
   }
 
   return (
-    <Page
-      description="Search sections and inspect enrollment status with admin-only APIs."
-      title="Admin / Enrollment Status"
-    >
-      <Card subtitle="Use the standard section list filters, then pick a section." title="Section lookup">
+    <Page description="분반별 신청 인원과 학생 목록을 확인할 수 있습니다." title="관리자 / 신청 현황">
+      <Card subtitle="학기를 고르고 원하는 분반을 선택하세요." title="분반 찾기">
         <SectionFilters filters={filters} onChange={updateFilters} semesters={semesters} />
       </Card>
 
       {!filters.semesterId && (
-        <Notice title="Semester required" tone="info">
-          Select a semester before loading section candidates.
+        <Notice title="학기를 선택해 주세요." tone="info">
+          학기를 선택하면 분반 목록을 조회할 수 있습니다.
         </Notice>
       )}
 
@@ -84,14 +81,14 @@ export function AdminSectionEnrollmentStatusPage() {
       {sectionsQuery.error && <ErrorAlert error={sectionsQuery.error} />}
 
       {filters.semesterId && sectionsQuery.isLoading && (
-        <Notice title="Loading" tone="info">
-          Fetching sections for lookup...
+        <Notice title="불러오는 중" tone="info">
+          분반 목록을 불러오고 있습니다.
         </Notice>
       )}
 
       {filters.semesterId && !sectionsQuery.isLoading && sections.length === 0 && (
-        <Notice title="No section results" tone="info">
-          No sections matched the current lookup filters.
+        <Notice title="조회 결과가 없습니다." tone="info">
+          현재 조건에 맞는 분반이 없습니다.
         </Notice>
       )}
 
@@ -100,14 +97,14 @@ export function AdminSectionEnrollmentStatusPage() {
           <Card
             key={section.sectionId}
             subtitle={`${section.courseCode} / ${section.semesterName}`}
-            title={`${section.courseName} - ${section.sectionNo}`}
+            title={`${section.courseName} ${section.sectionNo}분반`}
           >
             <div className="badge-row">
               <Badge tone="primary">
                 {formatSchedule(section.dayOfWeek, section.startPeriod, section.endPeriod)}
               </Badge>
               <Badge>{formatSeatSummary(section.remainingCount, section.capacity)}</Badge>
-              <Badge>Section ID #{section.sectionId}</Badge>
+              <Badge>분반 ID {section.sectionId}</Badge>
             </div>
 
             <div className="button-row">
@@ -117,10 +114,10 @@ export function AdminSectionEnrollmentStatusPage() {
                 type="button"
                 variant={String(section.sectionId) === sectionId ? "primary" : "secondary"}
               >
-                {String(section.sectionId) === sectionId ? "Selected" : "View enrollment status"}
+                {String(section.sectionId) === sectionId ? "선택됨" : "신청 현황 보기"}
               </Button>
               <Button asChild size="sm" variant="ghost">
-                <Link to={`/sections/${section.sectionId}`}>Open section detail</Link>
+                <Link to={`/sections/${section.sectionId}`}>강의 상세 보기</Link>
               </Button>
             </div>
           </Card>
@@ -136,10 +133,10 @@ export function AdminSectionEnrollmentStatusPage() {
             type="button"
             variant="secondary"
           >
-            Previous
+            이전
           </Button>
           <span className="pagination__status">
-            Page {page + 1} / {totalPages}
+            {page + 1} / {totalPages} 페이지
           </span>
           <Button
             disabled={page + 1 >= totalPages}
@@ -148,31 +145,28 @@ export function AdminSectionEnrollmentStatusPage() {
             type="button"
             variant="secondary"
           >
-            Next
+            다음
           </Button>
         </div>
       )}
 
       {!sectionId && (
-        <Notice title="Section not selected" tone="info">
-          Pick a section from the lookup results to load enrollment status.
+        <Notice title="분반을 선택해 주세요." tone="info">
+          목록에서 분반을 고르면 신청 현황이 표시됩니다.
         </Notice>
       )}
 
       {statusQuery.error && <ErrorAlert error={statusQuery.error} />}
 
       {statusQuery.isLoading && sectionId && (
-        <Notice title="Loading" tone="info">
-          Fetching enrollment status...
+        <Notice title="불러오는 중" tone="info">
+          신청 현황을 불러오고 있습니다.
         </Notice>
       )}
 
       {status && (
         <>
-          <Card
-            subtitle={`${status.courseCode} / ${status.semesterName} / Section ${status.sectionNo}`}
-            title="Section status"
-          >
+          <Card subtitle={`${status.courseCode} / ${status.semesterName} / ${status.sectionNo}분반`} title="분반 현황">
             <div className="badge-row">
               <Badge tone="primary">
                 {formatSchedule(status.dayOfWeek, status.startPeriod, status.endPeriod)}
@@ -183,48 +177,48 @@ export function AdminSectionEnrollmentStatusPage() {
 
             <div className="detail-list detail-list--two-columns">
               <div>
-                <span className="detail-list__label">Section ID</span>
+                <span className="detail-list__label">분반 ID</span>
                 <span>{status.sectionId}</span>
               </div>
               <div>
-                <span className="detail-list__label">Current count</span>
+                <span className="detail-list__label">신청 인원</span>
                 <span>{status.currentCount}</span>
               </div>
               <div>
-                <span className="detail-list__label">Remaining count</span>
+                <span className="detail-list__label">잔여 좌석</span>
                 <span>{status.remainingCount}</span>
               </div>
               <div>
-                <span className="detail-list__label">Capacity</span>
+                <span className="detail-list__label">정원</span>
                 <span>{status.capacity}</span>
               </div>
             </div>
           </Card>
 
-          <Card subtitle="Ordered by enrolledAt desc" title="Enrollment records">
+          <Card subtitle="최근 신청 순서대로 표시됩니다." title="신청 학생 목록">
             {status.enrollments.length === 0 ? (
-              <Notice title="No enrollments" tone="info">
-                No students are currently enrolled in this section.
+              <Notice title="신청한 학생이 없습니다." tone="info">
+                아직 이 분반에 신청한 학생이 없습니다.
               </Notice>
             ) : (
               <div className="stack">
                 {status.enrollments.map((enrollment) => (
                   <Card
                     key={enrollment.enrollmentId}
-                    subtitle={`Student #${enrollment.studentNumber}`}
+                    subtitle={`학번 ${enrollment.studentNumber}`}
                     title={enrollment.studentName}
                   >
                     <div className="detail-list detail-list--two-columns">
                       <div>
-                        <span className="detail-list__label">Enrollment ID</span>
+                        <span className="detail-list__label">신청 ID</span>
                         <span>{enrollment.enrollmentId}</span>
                       </div>
                       <div>
-                        <span className="detail-list__label">Student ID</span>
+                        <span className="detail-list__label">학생 ID</span>
                         <span>{enrollment.studentId}</span>
                       </div>
                       <div>
-                        <span className="detail-list__label">Submitted at</span>
+                        <span className="detail-list__label">신청 시각</span>
                         <span>{formatDateTime(enrollment.enrolledAt)}</span>
                       </div>
                     </div>
@@ -236,7 +230,7 @@ export function AdminSectionEnrollmentStatusPage() {
         </>
       )}
 
-      <Card subtitle="Direct navigation without search results" title="Jump to a section ID">
+      <Card subtitle="분반 ID를 알고 있다면 바로 이동할 수 있습니다." title="분반 ID로 이동">
         <SectionIdJumpForm sectionId={sectionId} />
       </Card>
     </Page>
@@ -263,12 +257,12 @@ function SectionIdJumpForm({ sectionId }: { sectionId: string | undefined }) {
         navigate(`/admin/sections/${value}/enrollments`);
       }}
     >
-      <Field htmlFor="section-id-jump" label="Section ID">
+      <Field htmlFor="section-id-jump" label="분반 ID">
         <input
           id="section-id-jump"
           min="1"
           onChange={(event) => setValue(event.target.value)}
-          placeholder="Enter section ID"
+          placeholder="분반 ID를 입력하세요"
           required
           type="number"
           value={value}
@@ -277,7 +271,7 @@ function SectionIdJumpForm({ sectionId }: { sectionId: string | undefined }) {
 
       <div className="button-row">
         <Button type="submit" variant="secondary">
-          Load section
+          불러오기
         </Button>
       </div>
     </form>

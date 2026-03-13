@@ -10,13 +10,13 @@ export function EnrollmentList({ items }: { items: MyEnrollmentItem[] }) {
       {items.map((item) => (
         <Card
           key={item.enrollmentId}
-          subtitle={`${item.courseCode} • ${item.semesterName}`}
-          title={`${item.courseName} - ${item.sectionNo}`}
+          subtitle={`${item.courseCode} / ${item.semesterName}`}
+          title={`${item.courseName} ${item.sectionNo}분반`}
         >
           <div className="badge-row">
             <Badge tone="primary">{formatSchedule(item.dayOfWeek, item.startPeriod, item.endPeriod)}</Badge>
             <Badge>{item.professorName}</Badge>
-            <Badge>{item.credit} credits</Badge>
+            <Badge>{item.credit}학점</Badge>
           </div>
 
           <div className="button-row">

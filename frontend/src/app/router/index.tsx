@@ -1,4 +1,4 @@
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, Navigate } from "react-router-dom";
 import { AdminLayout } from "../layouts/AdminLayout";
 import { AdminCoursePage } from "../../features/admin/AdminCoursePage";
 import { AdminDashboardPage } from "../../features/admin/AdminDashboardPage";
@@ -9,7 +9,6 @@ import { LoginPage } from "../../features/auth/LoginPage";
 import { MyEnrollmentsPage } from "../../features/enrollments/MyEnrollmentsPage";
 import { SectionDetailPage } from "../../features/sections/SectionDetailPage";
 import { SectionListPage } from "../../features/sections/SectionListPage";
-import { SemesterListPage } from "../../features/semesters/SemesterListPage";
 import { AdminGuard, AuthGuard, HomeRedirect } from "./guards";
 import { RootLayout } from "../layouts/RootLayout";
 import { Page } from "../../shared/ui/Page";
@@ -25,7 +24,7 @@ export const router = createBrowserRouter([
         path: "semesters",
         element: (
           <AuthGuard>
-            <SemesterListPage />
+            <Navigate replace to="/sections" />
           </AuthGuard>
         ),
       },
@@ -72,16 +71,16 @@ export const router = createBrowserRouter([
       {
         path: "403",
         element: (
-          <Page title="403" description="Only admin users can access this route.">
-            Permission denied.
+          <Page title="접근 제한" description="관리자만 접근할 수 있는 메뉴입니다.">
+            권한이 없습니다.
           </Page>
         ),
       },
       {
         path: "*",
         element: (
-          <Page title="404" description="The route could not be found.">
-            Route not found.
+          <Page title="페이지를 찾을 수 없습니다." description="주소를 다시 확인해 주세요.">
+            요청한 화면이 없습니다.
           </Page>
         ),
       },

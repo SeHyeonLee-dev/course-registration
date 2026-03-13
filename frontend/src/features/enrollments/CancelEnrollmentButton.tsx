@@ -12,7 +12,7 @@ export function CancelEnrollmentButton({ enrollmentId }: { enrollmentId: number 
       type="button"
       variant="secondary"
     >
-      Cancel
+      신청 취소
     </Button>
   );
 }

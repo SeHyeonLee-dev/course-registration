@@ -56,12 +56,9 @@ export function AdminSemesterPage() {
   }
 
   return (
-    <Page
-      description="Create semesters and update enrollment windows with repo-backed admin APIs."
-      title="Admin / Semesters"
-    >
+    <Page description="학기를 만들고 수강신청 기간을 조정할 수 있습니다." title="관리자 / 학기">
       <div className="summary-grid">
-        <Card subtitle="POST /api/admin/semesters" title="Create semester">
+        <Card subtitle="새 학기를 등록합니다." title="학기 생성">
           <form
             className="stack"
             onSubmit={(event) => {
@@ -82,7 +79,7 @@ export function AdminSemesterPage() {
             }}
           >
             <div className="filters-grid">
-              <Field htmlFor="semester-name" hint="Example: 2026-2" label="Name">
+              <Field htmlFor="semester-name" hint="예: 2026-2" label="학기명">
                 <input
                   id="semester-name"
                   onChange={(event) => setCreateField("name", event.target.value)}
@@ -92,7 +89,7 @@ export function AdminSemesterPage() {
                 />
               </Field>
 
-              <Field htmlFor="semester-start-date" label="Start date">
+              <Field htmlFor="semester-start-date" label="학기 시작일">
                 <input
                   id="semester-start-date"
                   onChange={(event) => setCreateField("startDate", event.target.value)}
@@ -102,7 +99,7 @@ export function AdminSemesterPage() {
                 />
               </Field>
 
-              <Field htmlFor="semester-end-date" label="End date">
+              <Field htmlFor="semester-end-date" label="학기 종료일">
                 <input
                   id="semester-end-date"
                   onChange={(event) => setCreateField("endDate", event.target.value)}
@@ -112,7 +109,7 @@ export function AdminSemesterPage() {
                 />
               </Field>
 
-              <Field htmlFor="semester-enroll-start" label="Enrollment start">
+              <Field htmlFor="semester-enroll-start" label="신청 시작일시">
                 <input
                   id="semester-enroll-start"
                   onChange={(event) => setCreateField("enrollStartAt", event.target.value)}
@@ -122,7 +119,7 @@ export function AdminSemesterPage() {
                 />
               </Field>
 
-              <Field htmlFor="semester-enroll-end" label="Enrollment end">
+              <Field htmlFor="semester-enroll-end" label="신청 종료일시">
                 <input
                   id="semester-enroll-end"
                   onChange={(event) => setCreateField("enrollEndAt", event.target.value)}
@@ -137,21 +134,18 @@ export function AdminSemesterPage() {
 
             <div className="button-row">
               <Button isLoading={createSemesterMutation.isPending} type="submit">
-                Create semester
+                학기 생성
               </Button>
             </div>
           </form>
         </Card>
 
-        <Card
-          subtitle="PUT /api/admin/semesters/{semesterId}/enrollment-period"
-          title="Update enrollment period"
-        >
+        <Card subtitle="등록된 학기의 수강신청 기간을 수정합니다." title="신청 기간 수정">
           {semestersQuery.error && <ErrorAlert error={semestersQuery.error} />}
 
           {semesters.length === 0 ? (
-            <Notice title="No semesters" tone="info">
-              Create a semester before updating its enrollment period.
+            <Notice title="등록된 학기가 없습니다." tone="info">
+              먼저 학기를 생성해 주세요.
             </Notice>
           ) : (
             <form
@@ -182,14 +176,14 @@ export function AdminSemesterPage() {
               }}
             >
               <div className="filters-grid">
-                <Field htmlFor="semester-select" label="Semester">
+                <Field htmlFor="semester-select" label="학기">
                   <select
                     id="semester-select"
                     onChange={(event) => setSelectedSemester(event.target.value)}
                     required
                     value={periodForm.semesterId}
                   >
-                    <option value="">Select semester</option>
+                    <option value="">학기를 선택하세요</option>
                     {semesters.map((semester) => (
                       <option key={semester.semesterId} value={String(semester.semesterId)}>
                         {semester.name}
@@ -198,7 +192,7 @@ export function AdminSemesterPage() {
                   </select>
                 </Field>
 
-                <Field htmlFor="period-start" label="Enrollment start">
+                <Field htmlFor="period-start" label="신청 시작일시">
                   <input
                     id="period-start"
                     onChange={(event) =>
@@ -210,7 +204,7 @@ export function AdminSemesterPage() {
                   />
                 </Field>
 
-                <Field htmlFor="period-end" label="Enrollment end">
+                <Field htmlFor="period-end" label="신청 종료일시">
                   <input
                     id="period-end"
                     onChange={(event) =>
@@ -231,7 +225,7 @@ export function AdminSemesterPage() {
                   isLoading={updatePeriodMutation.isPending}
                   type="submit"
                 >
-                  Update period
+                  기간 수정
                 </Button>
               </div>
             </form>
@@ -240,22 +234,22 @@ export function AdminSemesterPage() {
       </div>
 
       {createdSemester && (
-        <Card subtitle="201 Created response" title="Created semester">
+        <Card subtitle="새로 등록한 학기 정보입니다." title="생성된 학기">
           <div className="detail-list detail-list--two-columns">
             <div>
-              <span className="detail-list__label">Semester ID</span>
+              <span className="detail-list__label">학기 ID</span>
               <span>{createdSemester.semesterId}</span>
             </div>
             <div>
-              <span className="detail-list__label">Name</span>
+              <span className="detail-list__label">학기명</span>
               <span>{createdSemester.name}</span>
             </div>
             <div>
-              <span className="detail-list__label">Term</span>
+              <span className="detail-list__label">학기 기간</span>
               <span>{formatDateRange(createdSemester.startDate, createdSemester.endDate)}</span>
             </div>
             <div>
-              <span className="detail-list__label">Enrollment period</span>
+              <span className="detail-list__label">신청 기간</span>
               <span>
                 {formatDateTimeRange(createdSemester.enrollStartAt, createdSemester.enrollEndAt)}
               </span>
@@ -265,7 +259,7 @@ export function AdminSemesterPage() {
       )}
 
       {updatedSemester && (
-        <Notice title="Enrollment period updated" tone="success">
+        <Notice title="수강신청 기간을 수정했습니다." tone="success">
           {updatedSemester.name}:{" "}
           {formatDateTimeRange(updatedSemester.enrollStartAt, updatedSemester.enrollEndAt)}
         </Notice>

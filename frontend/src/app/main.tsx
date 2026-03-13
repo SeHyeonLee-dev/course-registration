@@ -8,7 +8,7 @@ import { router } from "./router";
 const rootElement = document.getElementById("root");
 
 if (!rootElement) {
-  throw new Error("Root element '#root' was not found.");
+  throw new Error("앱을 렌더링할 루트 요소를 찾을 수 없습니다.");
 }
 
 createRoot(rootElement).render(

@@ -6,7 +6,7 @@ export function ErrorAlert({ error }: { error: unknown }) {
     const fieldErrors = Object.entries(error.fieldErrors ?? {});
 
     return (
-      <Notice title={error.code ?? "API error"} tone="danger">
+      <Notice title="처리 중 문제가 발생했습니다." tone="danger">
         <div className="stack stack--compact">
           <span>{error.message}</span>
           {fieldErrors.length > 0 && (
@@ -24,8 +24,8 @@ export function ErrorAlert({ error }: { error: unknown }) {
   }
 
   return (
-    <Notice title="Unexpected error" tone="danger">
-      {error instanceof Error ? error.message : "Unknown error"}
+    <Notice title="예상하지 못한 오류가 발생했습니다." tone="danger">
+      {error instanceof Error ? error.message : "알 수 없는 오류"}
     </Notice>
   );
 }

@@ -19,12 +19,9 @@ export function MyEnrollmentsPage() {
   const enrollmentData = enrollmentsQuery.data;
 
   return (
-    <Page
-      description="Current enrollments and timetable from GET /api/enrollments/my."
-      title="My Enrollments"
-    >
-      <Card subtitle="Optional semester filter" title="Filter">
-        <Field label="Semester">
+    <Page description="신청한 강의와 시간표를 한 번에 확인할 수 있습니다." title="내 신청내역">
+      <Card subtitle="학기별로 신청 내역을 확인할 수 있습니다." title="학기 선택">
+        <Field label="학기">
           <select
             onChange={(event) => {
               const value = event.target.value;
@@ -38,7 +35,7 @@ export function MyEnrollmentsPage() {
             }}
             value={semesterId ?? ""}
           >
-            <option value="">All semesters</option>
+            <option value="">전체 학기</option>
             {semesters.map((semester) => (
               <option key={semester.semesterId} value={String(semester.semesterId)}>
                 {semester.name}
@@ -49,8 +46,8 @@ export function MyEnrollmentsPage() {
       </Card>
 
       {enrollmentsQuery.isLoading && (
-        <Notice title="Loading" tone="info">
-          Fetching enrollment data...
+        <Notice title="불러오는 중" tone="info">
+          신청 내역을 불러오고 있습니다.
         </Notice>
       )}
 
@@ -59,31 +56,31 @@ export function MyEnrollmentsPage() {
       {enrollmentData && (
         <>
           <div className="summary-grid">
-            <Card title="Credit status">
+            <Card title="신청 학점 현황">
               <div className="summary-metric">
-                <span className="summary-metric__label">Applied</span>
+                <span className="summary-metric__label">신청 학점</span>
                 <strong>{enrollmentData.appliedCredit}</strong>
               </div>
               <div className="summary-metric">
-                <span className="summary-metric__label">Remaining</span>
+                <span className="summary-metric__label">남은 학점</span>
                 <strong>{enrollmentData.remainingCredit}</strong>
               </div>
               <div className="summary-metric">
-                <span className="summary-metric__label">Max</span>
+                <span className="summary-metric__label">최대 학점</span>
                 <strong>{enrollmentData.maxCredit}</strong>
               </div>
             </Card>
           </div>
 
           {enrollmentData.items.length === 0 ? (
-            <Notice title="No enrollments" tone="info">
-              You do not have any enrolled sections for the current filter.
+            <Notice title="신청한 강의가 없습니다." tone="info">
+              선택한 학기에 신청한 강의가 없습니다.
             </Notice>
           ) : (
             <EnrollmentList items={enrollmentData.items} />
           )}
 
-          <Card subtitle="Grouped by day of week" title="Timetable">
+          <Card subtitle="요일별로 신청한 강의를 확인할 수 있습니다." title="시간표">
             <TimetableGrid timetable={enrollmentData.timetable} />
           </Card>
         </>
